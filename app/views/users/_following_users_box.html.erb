@@ -1,0 +1,9 @@
+<% if user.image.attached? %>
+  <%= link_to user_path(user) do %>
+    <%= image_tag user.image.variant(combine_options:{resize:"200x200^",crop:"200x200+0+0",gravity: :center}).processed, class: "following-avator img-fluid" %>
+  <% end %>
+<% else %>
+  <%= link_to user_path(user) do %>
+    <%= image_tag 'default.jpg', class: "following-avator img-fluid" %>
+  <% end %>
+<% end %>

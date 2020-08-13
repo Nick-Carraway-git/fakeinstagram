@@ -1,0 +1,38 @@
+<% provide(:title, "#{@user.name}の空間") %>
+
+<div class="row">
+  <section class="user_info col-sm-5 col-xs-12">
+    <%if @user.image.attached? %>
+      <%= image_tag @user.image.variant(combine_options:{resize:"600x600^",crop:"600x600+0+0",gravity: :center}).processed, class: "avator" %>
+    <% else %>
+      <%= image_tag 'default.jpg', class: "avator" %>
+    <% end %>
+  </section>
+  <section class="stats col-sm-7 col-xs-12">
+    <h3><%= @user.name %></h3>
+    <% if @user == current_user %>
+      <%= link_to 'プロフィールを編集', edit_user_registration_path, class: 'profile-edit-button' %>
+    <% end %>
+    <div class="follow-stats-list">
+      <%= render 'shared/followstats' %>
+    </div>
+    <div class="introduce">
+      <%= @user.introduce %>
+    </div>
+    <%= render 'follow_form' if user_signed_in? %>
+  </section>
+</div>
+
+<div class="row">
+    <% if @user.microposts.any? %>
+      <% @microposts.each do |micropost| %>
+        <button type="button" class="mordal-button col-4" data-toggle="modal" data-target="#mordal-<%= micropost.id %>">
+          <%= image_tag micropost.image.variant(combine_options:{resize:"900x900^",crop:"900x900+0+0",gravity: :center}).processed, class: "thumbnail img-thumbnail" %>
+        </button>
+        <% @mordal_micropost = micropost %>
+        <ol class="microposts">
+          <%= render 'microposts/micropost_mordal', micropost: @mordal_micropost %>
+        </ol>
+      <% end %>
+    <% end %>
+</div>

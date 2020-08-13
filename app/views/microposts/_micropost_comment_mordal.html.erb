@@ -1,0 +1,28 @@
+  <li id="micropost-<%= micropost.id %>" class="forgivejs micropost-element">
+  <%# イメージがない投稿 = 返信投稿の時 %>
+  <% if !(micropost.image.attached?) %>
+    <div class="row reply-box">
+      <div class="col-3">
+        <% if micropost.user.image.attached? %>
+          <%= image_tag micropost.user.image.variant(combine_options:{resize:"200x200^",crop:"200x200+0+0",gravity: :center}).processed, class: "reply-avator img-fluid" %>
+        <% else %>
+          <%= image_tag 'default.jpg', class: "reply-avator img-fluid" %>
+        <% end %>
+      </div>
+      <div class="col-9">
+        <span class="reply-name"><%= link_to micropost.user.name, user_path(micropost.user) %></span>
+        <p class="reply-comment"><%= micropost.content %></p>
+      </div>
+    </div>
+  <% end %>
+
+  <%# 通常の投稿の時 %>
+  <%= link_to micropost_path(micropost), rocal: true, class: "micropost-link" do %>
+
+    <% if micropost.image.attached? %>
+      <%= link_to micropost_path(micropost), rocal: true do %>
+        <%= image_tag micropost.image.variant(combine_options:{resize:"900x900^",crop:"900x900+0+0",gravity: :center}).processed, class: "thumbnail img-thumbnail" %>
+      <% end %>
+    <% end %>
+  <% end %>
+</li>

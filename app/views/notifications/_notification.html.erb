@@ -1,0 +1,14 @@
+<% visitor = notification.visitor %>
+<% micropost = notification.micropost %>
+
+<div class="notification-box ">
+  <%= link_to user_path(notification.visitor) do %>
+    <%if visitor.image.attached? %>
+      <%= image_tag visitor.image.variant(combine_options:{resize:"80x80^",crop:"80x80+0+0",gravity: :center}).processed, class: "notification-user" %>
+    <% else %>
+      <%= image_tag 'default.jpg', class: "notification-user" %>
+    <% end %>
+  <%= notification_form(notification) %><span class="moderate-font"><%= " (#{time_ago_in_words(notification.created_at)} 前)" %></span>
+  <br>
+  <% end %>
+</div>

@@ -1,0 +1,11 @@
+<% unless current_user == @user %>
+  <%# いいねボタンをモーダルからでも機能させるための変数定義　%>
+  <% @micropost = Micropost.find_by(id: micropost_id) %>
+  <div id="favor_form">
+  <% if current_user.favoring?(@micropost) %>
+    <%= render 'microposts/unfavor' %>
+  <% else %>
+    <%= render 'microposts/favor' %>
+  <% end %>
+  </div>
+<% end %>

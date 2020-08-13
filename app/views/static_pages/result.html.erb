@@ -1,0 +1,22 @@
+<% provide(:title, '検索結果') %>
+<h2>Search Results</h2>
+
+<%# 検索結果をUser/Micropostに分けて表示 %>
+<div class="row">
+  <div class="col-4">
+    <h4 class="result-description">Users</h4>
+    <% if !(@users.nil?) %>
+      <ul class="users">
+        <%= render @users %>
+      </ul>
+    <% end %>
+  </div>
+  <div class="col-8">
+    <h4 class="result-description">Microposts</h4>
+    <% if !(@microposts.nil?) %>
+      <ul class="microposts">
+        <%= render @microposts %>
+      </ul>
+    <% end %>
+  </div>
+</div>
