@@ -1,0 +1,19 @@
+<% flash.each do |msg_type, msg| %>
+  <div class="alert alert-<%= msg_type %>" role="alert" id="alert">
+    <a href="#" class="close" data-dismiss="alert">×</a>
+    <%= msg %>
+  </div>
+<% end %>
+
+<% if !(@micropost.nil?) && @micropost.errors.any? %>
+  <div id="error_explanation">
+    <div class="alert alert-danger">
+      エラーが <%= pluralize(@micropost.errors.count, "") %>箇所発生しました。
+    </div>
+    <ul>
+    <% @micropost.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>

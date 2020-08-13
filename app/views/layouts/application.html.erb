@@ -1,15 +1,25 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Fakeinstagram</title>
+    <title><%= full_title(yield(:title)) %></title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name=”description” content=”fakeinst”>
   </head>
 
   <body>
-    <%= yield %>
+    <% unless !(user_signed_in?) && current_page?(root_path) %>
+      <%= render 'shared/header' %>
+    <% end %>
+    <div class="container">
+      <%= yield %>
+      <% if Rails.env.development? %>
+        <div class="debug"><%= debug(params) %></div>
+      <% end %>
+    </div>
   </body>
 </html>

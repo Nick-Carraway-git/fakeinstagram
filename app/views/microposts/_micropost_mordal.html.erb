@@ -1,0 +1,109 @@
+<%# モーダルで固有のMicropostの返信を読み込むための変数定義 %>
+<% @reply_microposts = Micropost.where(in_reply_to: micropost.id) %>
+<%# モーダルでの返信用空オブジェクト %>
+<% @for_reply_micropost = Micropost.new %>
+
+<div class="modal fade" id="mordal-<%= micropost.id %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document"">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal</h5>
+        <button type="button" class="btn btn-warning btn-lg shiny mordal-stopper" data-dismiss="modal" aria-hidden="true">Cancel</button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+         <% if micropost != nil %>
+         <%= render 'shared/flash_messages' %>
+          <%# モーダル左部分の表示内容 %>
+          <div class="row">
+            <div class="col-lg-6">
+              <ol class="microposts">
+                <%# Micropostの画像表示部分 %>
+                <% if @for_reply_micropost != nil %>
+                  <li id="micropost-<%= micropost.id %>" class="forgivejs micropost-element">
+                <% else %>
+                  <li id="micropost-<%= micropost.id %>" class="forgivejs micropost-element">
+                <% end %>
+
+                  <%# イメージがない投稿 = 返信投稿の時 %>
+                  <% if !(micropost.image.attached?) %>
+                    <div class="row reply-box">
+                      <div class="col-3">
+                        <% if micropost.user.image.attached? %>
+                          <%= image_tag micropost.user.image.variant(combine_options:{resize:"200x200^",crop:"200x200+0+0",gravity: :center}).processed, class: "reply-avator img-fluid" %>
+                        <% else %>
+                          <%= image_tag 'default.jpg', class: "reply-avator img-fluid" %>
+                        <% end %>
+                      </div>
+                      <div class="col-9">
+                        <span class="reply-name"><%= link_to micropost.user.name, user_path(micropost.user) %></span>
+                        <p class="reply-comment"><%= micropost.content %></p>
+                      </div>
+                    </div>
+                  <% end %>
+
+                  <%# 通常の投稿の時 %>
+                  <%= link_to micropost_path(micropost), rocal: true, class: "micropost-link" do %>
+
+                    <% if micropost.image.attached? %>
+                      <%= link_to micropost_path(micropost), rocal: true do %>
+                        <%= image_tag micropost.image.variant(combine_options:{resize:"900x900^",crop:"900x900+0+0",gravity: :center}).processed, class: "thumbnail thumnail-mordal" %>
+                      <% end %>
+                    <% end %>
+                  <% end %>
+                </li>
+              </ol>
+            </div>
+            <%# モーダルの右部分(ユーザー情報/本文/返信コメント) %>
+            <div class="col-lg-6">
+                <section class="user_info">
+                  <h3><%= micropost.user.name %></h3>
+                  <p><%= micropost.content %></p>
+
+                  <div class="row">
+                    <div class="col-5">
+                      <%= render 'microposts/favor_form', micropost_id: micropost.id if current_user != micropost.user && micropost.image.attached? %>
+                    </div>
+                    <div class="col-7">
+                      <div class=" date-and-delete">
+                        <%= micropost.created_at.strftime("%Y-%m-%d %H:%M") %>
+                        <% if current_user == micropost.user %>
+                          <%= link_to micropost_path(micropost), method: :delete,
+                                                                           data: { confirm: "本当によろしいですか？" } do %>
+                              <i class="fas fa-trash" style="color: black;"></i>
+                          <% end %>
+                        <% end %>
+                      </div>
+                    </div>
+                  </div>
+
+                  <hr>
+
+                  <ol class="microposts reply_microposts">
+                    <% @reply_microposts.each do |reply_micropost| %>
+                        <%= render 'microposts/micropost_comment_mordal', micropost: reply_micropost %>
+                    <% end %>
+                  </ol>
+
+                <%= form_with(model: @for_reply_micropost,　local: true) do |f| %>
+                  <%= f.hidden_field :in_reply_to, value: micropost.id %>
+                  <%#= f.hidden_field :user_id, value: current_user.id %>
+                  <div class="form-group">
+                    <%= f.text_area :content %>
+                  </div>
+                  <div>
+                    <%= f.submit "Reply", class: "btn btn-primary micropost-new-btn" %>
+                  </div>
+                <% end %>
+                </section>
+            </div>
+          </div>
+
+          <% end %>
+      </div>
+    </div>
+  </div>
+</div>

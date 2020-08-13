@@ -1,0 +1,61 @@
+<header>
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixied-top">
+  	<div class="container">
+      <%= link_to "Fakeinst", root_path, id: "logo", class: "navbar-brand mr-auto" %>
+      <button class="navbar-toggler" type="button"  data-toggle="collapse" data-target="#header-content"  aria-controls="header-content" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+  		</button>
+
+  		<div class="collapse navbar-collapse" id="header-content">
+        <% if user_signed_in? %>
+  			   <div class="navbar-nav ml-auto" id="search-window">
+              <%= form_with(url: results_path, method: :get, local: true, class: "form-inline") do |f| %>
+                <%= f.text_field :search, class: "form-control search-box", size: 25 %>
+                <%= f.button type: "submit", name: nil,　class: "form-control search-bottun" do %>
+                  <i class="fas fa-search"></i>
+                <% end %>
+              <% end %>
+            </div>
+
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item">
+                <%= link_to favorites_path, class: 'nav-link hot' do %>
+                  <i class="fas fa-fire"></i>
+                <% end %>
+              </li>
+              <li class="nav-item">
+                <%= link_to notifications_path, class: 'nav-link activity' do %>
+                  <% if unchecked_notifications.any? %>
+                    <i class="fa fa-circle" style="color: gold;"></i>
+                  <% end %>
+                  <i class="far fa-heart"></i>
+                <% end %>
+              </li>
+              <li class="nav-item dropdown">
+    				    <a class="nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user"></i></a>
+    				    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <%= link_to 'マイページ', user_path(current_user), class: 'dropdown-item' %>
+                  <%= link_to 'プロフィールの編集', edit_user_registration_path, class: 'dropdown-item' %>
+                  <div class="dropdown-divider"></div>
+                  <%= link_to 'ログアウト', destroy_user_session_path, method: :delete, class: 'dropdown-item' %>
+    				    </div>
+    			     </li>
+               <li class="nav-item">
+                 <%= link_to new_micropost_path, class: 'nav-link picture-uproad' do %>
+                   <i class="far fa-images"></i>
+                 <% end %>
+               </li>
+        <% else %>
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <%= link_to "新規登録", new_user_registration_path, class: 'nav-link' %>
+            </li>
+            <li class="nav-item">
+              <%= link_to "ログイン", new_user_session_path, class: 'nav-link' %>
+            </li>
+        <% end %>
+  			</ul>
+  		</div>
+    </div>
+  </nav>
+</header>

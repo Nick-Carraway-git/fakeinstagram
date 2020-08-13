@@ -1,0 +1,55 @@
+<% provide(:title, "#{@micropost.user.name}'s Micropost") %>
+
+ <% if @micropost != nil %>
+ <%= render 'shared/flash_messages' %>
+
+  <div class="row">
+    <aside class="col-md-6">
+      <ol class="microposts">
+        <%= render @micropost %>
+      </ol>
+    </aside>
+    <div class="col-md-6">
+        <section class="user_info">
+          <h3><%= @micropost.user.name %></h3>
+          <p><%= @micropost.content %></p>
+
+          <div class="row">
+            <div class="col-5">
+              <%= render 'favor_form', micropost_id: @micropost.id if current_user != @micropost.user && @micropost.image.attached? && @home_microposts == nil %>
+            </div>
+            <div class="col-7">
+              <div class=" date-and-delete">
+                <%= @micropost.created_at.strftime("%Y-%m-%d %H:%M") %>
+                <% if current_user == @micropost.user %>
+                  <%= link_to micropost_path(@micropost), method: :delete,
+                                                                   data: { confirm: "本当によろしいですか？" } do %>
+                      <i class="fas fa-trash" style="color: black;"></i>
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+
+          <hr>
+
+          <ol class="microposts reply_microposts">
+            <%= render @reply_microposts %>
+          </ol>
+
+
+        <%= form_with(model: @for_reply_micropost,　local: true) do |f| %>
+          <%= f.hidden_field :in_reply_to, value: @micropost.id %>
+          <%#= f.hidden_field :user_id, value: current_user.id %>
+          <div class="form-group">
+            <%= f.text_area :content %>
+          </div>
+          <div>
+            <%= f.submit "Reply", class: "btn btn-primary micropost-new-btn" %>
+          </div>
+        <% end %>
+        </section>
+    </div>
+  </div>
+
+  <% end %>

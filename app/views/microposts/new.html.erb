@@ -1,0 +1,23 @@
+<% provide(:title, 'Micropostの投稿') %>
+
+<%= form_with(model: @micropost, local: true) do |f| %>
+  <%= render 'shared/flash_messages'%>
+  <h3 class="post-header">POST</h3>
+  <div class="form-group">
+    <%= f.text_area :content, placeholder: "コメントを入力してください。"%>
+  </div>
+  <%= f.submit "投稿", class: "btn btn-info micropost-new-btn" %>
+  <span class="image">
+    <%= f.file_field :image, accept: "image/jpeg, image/png" %>
+  </span>
+<% end %>
+
+<script type="text/javascript">
+  $("#micropost_image").bind("change", function() {
+    var size_in_megabytes = this.files[0].size/1024/1024;
+    if (size_in_megabytes > 5) {
+      alert("Maximum file size is 5MB. Please choose a smaller file.");
+      $("#micropost_image").val("");
+    }
+  });
+</script>
